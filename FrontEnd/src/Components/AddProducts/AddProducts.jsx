@@ -24,7 +24,7 @@ function AddProducts() {
   };
 
   const handleImageChange = (e) => {
-    console.log(e)
+    console.log(e.target.files[0])
     
     setFormData({
       ...formData, image:e.target.files[0]
@@ -34,10 +34,20 @@ function AddProducts() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const requestData = new FormData();
+    requestData.append('title',formData.title);
+    requestData.append('description',formData.description)
+    requestData.append('quantity',formData.quantity)
+    requestData.append('price',formData.price)
+    requestData.append('category',formData.category)
+    requestData.append('image',formData.image)
+
+    console.log(requestData)
+
     dispatch(postProductStart());
     try {
       console.log(formData)
-      const response = await axios.post("http://127.0.0.1:8000/api/products", JSON.stringify(formData));
+      const response = await axios.post("http://127.0.0.1:8000/api/products/", requestData);
       const data = await response.json();
       dispatch(postProductSuccess(data));
     } catch (err) {
